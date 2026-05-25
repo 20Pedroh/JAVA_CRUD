@@ -1,7 +1,7 @@
-package com.library.controller;
+package com.library.library_api.controller;
 
-import com.library.entity.Book;
-import com.library.service.BookService;
+import com.library.library_api.entity.Book;
+import com.library.library_api.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
