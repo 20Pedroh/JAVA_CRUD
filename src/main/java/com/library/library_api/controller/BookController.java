@@ -1,7 +1,9 @@
 package com.library.library_api.controller;
 
-import com.library.library_api.entity.Book;
+import com.library.library_api.dto.BookRequestDTO;
+import com.library.library_api.dto.BookResponseDTO;
 import com.library.library_api.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,26 +19,26 @@ public class BookController {
     }
 
     @PostMapping
-    public Book criar(@RequestBody Book book) {
-        return service.criar(book);
+    public BookResponseDTO criar(@RequestBody @Valid BookRequestDTO dto) {
+        return service.criar(dto);
     }
 
     @GetMapping
-    public List<Book> listarTodos() {
+    public List<BookResponseDTO> listarTodos() {
         return service.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public Book buscarPorId(@PathVariable Long id) {
+    public BookResponseDTO buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public Book atualizar(
+    public BookResponseDTO atualizar(
             @PathVariable Long id,
-            @RequestBody Book book
+            @RequestBody @Valid BookRequestDTO dto
     ) {
-        return service.atualizar(id, book);
+        return service.atualizar(id, dto);
     }
 
     @DeleteMapping("/{id}")

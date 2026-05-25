@@ -1,5 +1,7 @@
 package com.library.library_api.service;
 
+import com.library.library_api.dto.BookRequestDTO;
+import com.library.library_api.dto.BookResponseDTO;
 import com.library.library_api.entity.Book;
 import com.library.library_api.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -15,36 +17,69 @@ public class BookService {
         this.repository = repository;
     }
 
-    public Book criar(Book book) {
-        return repository.save(book);
+    public BookResponseDTO criar(BookRequestDTO dto) {
+
+        Book book = new Book();
+
+        book.setTitulo(dto.titulo());
+        book.setAutor(dto.autor());
+        book.setIsbn(dto.isbn());
+        book.setAnoPublicacao(dto.anoPublicacao());
+        book.setDisponivel(true);
+
+        Book bookSalvo = repository.save(book);
+
+        return converterParaDTO(bookSalvo);
     }
 
-    public List<Book> listarTodos() {
-        return repository.findAll();
+    public List<BookResponseDTO> listarTodos() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
-    public Book buscarPorId(Long id) {
-        return repository.findById(id)
+    public BookResponseDTO buscarPorId(Long id) {
+
+        Book book = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+
+        return converterParaDTO(book);
     }
 
-    public Book atualizar(Long id, Book bookAtualizado) {
+    public BookResponseDTO atualizar(Long id, BookRequestDTO dto) {
 
-        Book book = buscarPorId(id);
+        Book book = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
 
-        book.setTitulo(bookAtualizado.getTitulo());
-        book.setAutor(bookAtualizado.getAutor());
-        book.setIsbn(bookAtualizado.getIsbn());
-        book.setAnoPublicacao(bookAtualizado.getAnoPublicacao());
-        book.setDisponivel(bookAtualizado.getDisponivel());
+        book.setTitulo(dto.titulo());
+        book.setAutor(dto.autor());
+        book.setIsbn(dto.isbn());
+        book.setAnoPublicacao(dto.anoPublicacao());
 
-        return repository.save(book);
+        Book atualizado = repository.save(book);
+
+        return converterParaDTO(atualizado);
     }
 
     public void deletar(Long id) {
 
-        Book book = buscarPorId(id);
+        Book book = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
 
         repository.delete(book);
+    }
+
+    private BookResponseDTO converterParaDTO(Book book) {
+
+        return new BookResponseDTO(
+                book.getId(),
+                book.getTitulo(),
+                book.getAutor(),
+                book.getIsbn(),
+                book.getAnoPublicacao(),
+                book.getDisponivel()
+        );
     }
 }
