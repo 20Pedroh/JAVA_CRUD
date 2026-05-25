@@ -5,6 +5,7 @@ import com.library.library_api.dto.BookResponseDTO;
 import com.library.library_api.entity.Book;
 import com.library.library_api.repository.BookRepository;
 import org.springframework.stereotype.Service;
+import com.library.library_api.exception.BookNotFoundException;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class BookService {
     public BookResponseDTO buscarPorId(Long id) {
 
         Book book = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         return converterParaDTO(book);
     }
@@ -51,7 +52,7 @@ public class BookService {
     public BookResponseDTO atualizar(Long id, BookRequestDTO dto) {
 
         Book book = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         book.setTitulo(dto.titulo());
         book.setAutor(dto.autor());
@@ -66,7 +67,7 @@ public class BookService {
     public void deletar(Long id) {
 
         Book book = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+                .orElseThrow(() -> new BookNotFoundException(id));
 
         repository.delete(book);
     }
