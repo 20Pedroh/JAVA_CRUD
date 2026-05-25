@@ -22,4 +22,29 @@ public class BookService {
     public List<Book> listarTodos() {
         return repository.findAll();
     }
+
+    public Book buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+    }
+
+    public Book atualizar(Long id, Book bookAtualizado) {
+
+        Book book = buscarPorId(id);
+
+        book.setTitulo(bookAtualizado.getTitulo());
+        book.setAutor(bookAtualizado.getAutor());
+        book.setIsbn(bookAtualizado.getIsbn());
+        book.setAnoPublicacao(bookAtualizado.getAnoPublicacao());
+        book.setDisponivel(bookAtualizado.getDisponivel());
+
+        return repository.save(book);
+    }
+
+    public void deletar(Long id) {
+
+        Book book = buscarPorId(id);
+
+        repository.delete(book);
+    }
 }

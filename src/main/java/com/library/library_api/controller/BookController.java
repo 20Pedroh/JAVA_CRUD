@@ -25,4 +25,22 @@ public class BookController {
     public List<Book> listarTodos() {
         return service.listarTodos();
     }
+
+    @GetMapping("/{id}")
+    public Book buscarPorId(@PathVariable Long id) {
+        return service.buscarPorId(id);
+    }
+
+    @PutMapping("/{id}")
+    public Book atualizar(
+            @PathVariable Long id,
+            @RequestBody Book book
+    ) {
+        return service.atualizar(id, book);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        service.deletar(id);
+    }
 }
