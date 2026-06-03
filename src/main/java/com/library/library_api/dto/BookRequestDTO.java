@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotNull;
 
 public record BookRequestDTO(
 
-        @NotBlank(message = "Título é obrigatório")
-        String titulo,
+        @NotBlank(message = "Title is required")
+        String title,
 
-        @NotBlank(message = "Autor é obrigatório")
-        String autor,
+        @NotBlank(message = "Author is required")
+        String author,
 
-        @NotBlank(message = "ISBN é obrigatório")
+        @NotBlank(message = "ISBN is required")
         String isbn,
 
-        @NotNull(message = "Ano é obrigatório")
-        Integer anoPublicacao
+        @NotNull(message = "Publication year is required")
+        Integer publicationYear
 ) {
 }

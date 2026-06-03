@@ -6,6 +6,8 @@ import com.library.library_api.entity.Book;
 import com.library.library_api.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import com.library.library_api.exception.BookNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,30 +20,28 @@ public class BookService {
         this.repository = repository;
     }
 
-    public BookResponseDTO criar(BookRequestDTO dto) {
+    public BookResponseDTO create(BookRequestDTO dto) {
 
         Book book = new Book();
 
-        book.setTitulo(dto.titulo());
-        book.setAutor(dto.autor());
+        book.setTitle(dto.title());
+        book.setAuthor(dto.author());
         book.setIsbn(dto.isbn());
-        book.setAnoPublicacao(dto.anoPublicacao());
-        book.setDisponivel(true);
+        book.setPublicationYear(dto.publicationYear());
+        book.setAvailable(true);
 
         Book bookSalvo = repository.save(book);
 
         return converterParaDTO(bookSalvo);
     }
 
-    public List<BookResponseDTO> listarTodos() {
+    public Page<BookResponseDTO> findAll(Pageable pageable) {
 
-        return repository.findAll()
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
+        return repository.findAll(pageable)
+                .map(this::converterParaDTO);
     }
 
-    public BookResponseDTO buscarPorId(Long id) {
+    public BookResponseDTO findById(Long id) {
 
         Book book = repository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
@@ -49,22 +49,22 @@ public class BookService {
         return converterParaDTO(book);
     }
 
-    public BookResponseDTO atualizar(Long id, BookRequestDTO dto) {
+    public BookResponseDTO update(Long id, BookRequestDTO dto) {
 
         Book book = repository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
 
-        book.setTitulo(dto.titulo());
-        book.setAutor(dto.autor());
+        book.setTitle(dto.title());
+        book.setAuthor(dto.author());
         book.setIsbn(dto.isbn());
-        book.setAnoPublicacao(dto.anoPublicacao());
+        book.setPublicationYear(dto.publicationYear());
 
         Book atualizado = repository.save(book);
 
         return converterParaDTO(atualizado);
     }
 
-    public void deletar(Long id) {
+    public void delete(Long id) {
 
         Book book = repository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
@@ -76,11 +76,11 @@ public class BookService {
 
         return new BookResponseDTO(
                 book.getId(),
-                book.getTitulo(),
-                book.getAutor(),
+                book.getTitle(),
+                book.getAuthor(),
                 book.getIsbn(),
-                book.getAnoPublicacao(),
-                book.getDisponivel()
+                book.getPublicationYear(),
+                book.getAvailable()
         );
     }
 }

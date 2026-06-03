@@ -14,14 +14,14 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String titulo;
+    private String title;
 
-    private String autor;
+    private String author;
 
     @Column(unique = true)
     private String isbn;
 
-    private Integer anoPublicacao;
+    private Integer publicationYear;
 
-    private Boolean disponivel = true;
+    private Boolean available = true;
 }
